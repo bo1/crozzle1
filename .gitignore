@@ -1,4 +1,10 @@
 .DS_Store
 SIT323 - Cloud Application Development - 1082018 - week*
 zip backup
+.vs
+*.log
+*.CopyComplete
+*.cache
+Old Program and Old Files/Old Program/CrozzleApplication/obj/Debug/*
+
 
