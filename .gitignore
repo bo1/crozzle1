@@ -5,6 +5,7 @@ zip backup
 *.log
 *.CopyComplete
 *.cache
+Old Program and Old Files/log.txt
 Old Program and Old Files/Old Program/CrozzleApplication/bin
 Old Program and Old Files/Old Program/CrozzleApplication/obj
 
