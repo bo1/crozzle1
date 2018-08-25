@@ -50,6 +50,8 @@ namespace CrozzleApplication
                     MessageBox.Show("configuration filename is missing from the crozzle file", ApplicationAboutBox.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+                
+                // Add root to the path
                 else
                 {
                     String filename = configurationFileName.Trim();

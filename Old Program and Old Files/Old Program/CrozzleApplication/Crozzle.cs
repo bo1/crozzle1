@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace CrozzleApplication
 {
@@ -8,6 +9,8 @@ namespace CrozzleApplication
     {
         #region constants
         public static readonly Char[] StringDelimiters = new Char[] { '"' };
+        const String SizeDelimiter = ",";
+        const int SizeValueLength = 2;
         #endregion
 
         #region properties - errors
@@ -122,15 +125,71 @@ namespace CrozzleApplication
             StreamReader fileIn = new StreamReader(path);
             List<String> wordData = new List<string>();
 
-            // Validate file.
+            String section = null;
+            bool newBlock = false;
+
+            // Validate file
             while (!fileIn.EndOfStream)
             {
                 // Read a line.
                 String line = fileIn.ReadLine();
 
+                // Processing empty lines
+                if (Regex.IsMatch(line, @"^\s*$"))
+                    continue;
+                line = line.Trim();
+
+                // Processing comments
+                if (line.Contains("//"))
+                {
+                    if(line.StartsWith("//"))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        Errors.Add(String.Format(ConfigurationErrors.MixConfigWithComentError, line));
+                        continue;
+                    }
+                }
+
+                // Section check
+                switch (line)
+                {
+                    case "FILE-DEPENDENCIES":
+                    case "CROZZLE-SIZE":
+                    case "HORIZONTAL-SEQUENCES":
+                    case "VERTICAL-SEQUENCES":
+                        section = line;
+                        newBlock = true;
+                        break;
+                    case "END-FILE-DEPENDENCIES":
+                    case "END-CROZZLE-SIZE":
+                    case "END-HORIZONTAL-SEQUENCES":
+                    case "END-VERTICAL-SEQUENCES":
+                        section = null;
+                        newBlock = true;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (newBlock)
+                {
+                    newBlock = false;
+                    continue;
+                }
+
                 // Parse a crozzle file item.
                 CrozzleFileItem aCrozzleFileItem;
-                if (CrozzleFileItem.TryParse(line, out aCrozzleFileItem))
+
+                // Out of section comment
+                if (section == null)
+                {
+                    Errors.Add(String.Format(ConfigurationErrors.OutOfSectionError, line));
+                }
+                // Parse a crozzle item
+                else if (CrozzleFileItem.TryParse(line, out aCrozzleFileItem))
                 {
                     if (aCrozzleFileItem.IsConfigurationFile)
                     {
@@ -178,33 +237,64 @@ namespace CrozzleApplication
                             aCrozzle.WordListPath = wordListPath;
                         }
                     }
-                    else if (aCrozzleFileItem.IsRows)
+                    // Replace
+                    else if (aCrozzleFileItem.IsSize)
                     {
-                        // Get the number of rows.
-                        int rows;
-                        if (Validator.IsInt32(aCrozzleFileItem.KeyValue.Value.Trim(), out rows))
-                            aCrozzle.Rows = rows;
+                        // Split row & col
+                        String rawSizeData = aCrozzleFileItem.KeyValue.Value.Trim();
+                        String[] sizeSplit = rawSizeData.Split(new String[] { SizeDelimiter }, 2, StringSplitOptions.None);
+                        if (sizeSplit.Length != SizeValueLength)
+                        {
+                            Errors.Add(String.Format(KeyValueErrors.FieldCountError, sizeSplit.Length, rawSizeData, SizeValueLength));
+                        }
                         else
-                            Errors.Add(String.Format(CrozzleFileErrors.RowError, aCrozzleFileItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                        {
+                            int rows;
+                            if (Validator.IsInt32(sizeSplit[0].Trim(), out rows))
+                                aCrozzle.Rows = rows;
+                            else
+                                Errors.Add(String.Format(CrozzleFileErrors.RowError, aCrozzleFileItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+
+                            int columns;
+                            if (Validator.IsInt32(sizeSplit[1].Trim(), out columns))
+                                aCrozzle.Columns = columns;
+                            else
+                                Errors.Add(String.Format(CrozzleFileErrors.ColumnError, aCrozzleFileItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                        }
                     }
-                    else if (aCrozzleFileItem.IsColumns)
-                    {
-                        // Get the number of columns.
-                        int columns;
-                        if (Validator.IsInt32(aCrozzleFileItem.KeyValue.Value.Trim(), out columns))
-                            aCrozzle.Columns = columns;
-                        else
-                            Errors.Add(String.Format(CrozzleFileErrors.ColumnError, aCrozzleFileItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                    }
-                    else if (aCrozzleFileItem.IsRow)
+
+                    else if (aCrozzleFileItem.IsSequence)
                     {
                         // Collect potential word data for a horizontal word.
-                        wordData.Add(aCrozzleFileItem.KeyValue.OriginalKeyValue);
-                    }
-                    else if (aCrozzleFileItem.IsColumn)
-                    {
-                        // Collect potential word data for a vertical word.
-                        wordData.Add(aCrozzleFileItem.KeyValue.OriginalKeyValue);
+                        //wordData.Add(aCrozzleFileItem.KeyValue.OriginalKeyValue);
+                        String type;
+
+                        if (section == "HORIZONTAL-SEQUENCES")
+                        {
+                            type = "ROW";
+                        }
+                        else if (section == "VERTICAL-SEQUENCES")
+                        {
+                            type = "COLUMN";
+                        }
+                        else
+                        {
+                            Errors.AddRange(CrozzleFileItem.Errors);
+                            break;
+                        }
+
+                        String oldFormat = aCrozzleFileItem.KeyValue.OriginalKeyValue;
+
+                        oldFormat = oldFormat.Substring("SEQUENCE=".Length);
+                        string[] split;
+                        split = oldFormat.Split(',');
+                        String key = split[0];
+                        String row = split[1].Split('=')[1];
+                        String col = split[2];
+
+                        String newFormat = type + "=" + row + "," + key + "," + col;
+                        Console.WriteLine("New Format = " + newFormat);
+                        wordData.Add(newFormat);
                     }
                 }
                 else
@@ -241,7 +331,7 @@ namespace CrozzleApplication
             // Store validity.
             aCrozzle.FileValid = Errors.Count == 0;
             return (aCrozzle.FileValid);
-        }        
+        }
         #endregion
 
         #region validate crozzle
@@ -277,7 +367,7 @@ namespace CrozzleApplication
 
             // Check that the number of vertical words that intersect a horizontal word is within limits.
             CrozzleSequences.CheckHorizontalIntersections(Configuration.MinimumIntersectionsInHorizontalWords, Configuration.MaximumIntersectionsInHorizontalWords);
-            
+
             // Check that the number of horizontal words that intersect a vertical word is within limits.
             CrozzleSequences.CheckVerticalIntersections(Configuration.MinimumIntersectionsInVerticalWords, Configuration.MaximumIntersectionsInVerticalWords);
 

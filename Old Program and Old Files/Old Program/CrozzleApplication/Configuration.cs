@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
+
 
 namespace CrozzleApplication
 {
@@ -10,6 +12,17 @@ namespace CrozzleApplication
         public static String allowedCharacters = @"^[a-zA-Z]+$";
         public static String allowedBooleans = @"^(true|false)$";
         private static readonly Char[] PointSeparators = new Char[] { ',' };
+
+        public static string SECTION_LOGFILE = "LOGFILE";
+        public static string SECTION_SEQUENCES_IN_FILE = "SEQUENCES-IN-FILE";
+        public static string SECTION_CROZZLE_OUTPUT = "CROZZLE-OUTPUT";
+        public static string SECTION_CROZZLE_SIZE = "CROZZLE-SIZE";
+        public static string SECTION_SEQUENCES_IN_CROZZLE = "SEQUENCES-IN-CROZZLE";
+        public static string SECTION_INTERSECTIONS_IN_SEQUENCE = "INTERSECTIONS-IN-SEQUENCE";
+        public static string SECTION_DUPLICATE_SEQUENCES = "DUPLICATE-SEQUENCES";
+        public static string SECTION_VALID_GROUPS = "VALID-GROUPS";
+        public static string SECTION_INTERSECTING_POINTS = "INTERSECTING-POINTS";
+        public static string SECTION_NON_INTERSECTING_POINTS = "NON-INTERSECTING-POINTS";
         #endregion
 
         #region properties - errors
@@ -166,11 +179,15 @@ namespace CrozzleApplication
             ActualKeys = new List<string>();
             aConfiguration = new Configuration(path);
 
+            // Check file name
             if (aConfiguration.ConfigurationFileName.IndexOfAny(Path.GetInvalidFileNameChars()) > -1)
                 Errors.Add(String.Format(ConfigurationErrors.FilenameError, path));
+            // Open file
             else
             {
                 StreamReader fileIn = new StreamReader(path);
+                String section = null;
+                bool newBlock = false; 
 
                 // Validate file.
                 while (!fileIn.EndOfStream)
@@ -178,12 +195,79 @@ namespace CrozzleApplication
                     // Read a line.
                     String line = fileIn.ReadLine();
 
-                    // Parse a configuration item.
-                    ConfigurationFileItem aConfigurationItem;
-                    if (ConfigurationFileItem.TryParse(line, out aConfigurationItem))
+                    // Processing empty lines
+                    if (Regex.IsMatch(line, @"^\s*$"))
+                        continue;
+                    line = line.Trim();
+
+                    // Processing comments
+                    if (line.Contains("//"))
                     {
+                        if (line.StartsWith("//"))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            Errors.Add(String.Format(ConfigurationErrors.MixConfigWithComentError, line));
+                            continue;
+                        }
+                    }
+
+                    // Section check
+                    switch (line)
+                    {
+                        case "LOGFILE":
+                        case "SEQUENCES-IN-FILE":
+                        case "CROZZLE-OUTPUT":
+                        case "CROZZLE-SIZE":
+                        case "SEQUENCES-IN-CROZZLE":
+                        case "INTERSECTIONS-IN-SEQUENCES":
+                        case "DUPLICATE-SEQUENCES":
+                        case "VALID-GROUPS":
+                        case "INTERSECTING-POINTS":
+                        case "NON-INTERSECTING-POINTS":
+                            section = line;
+                            newBlock = true;
+                            break;
+                        case "END-LOGFILE":
+                        case "END-SEQUENCES-IN-FILE":
+                        case "END-CROZZLE-OUTPUT":
+                        case "END-CROZZLE-SIZE":
+                        case "END-SEQUENCES-IN-CROZZLE":
+                        case "END-INTERSECTIONS-IN-SEQUENCES":
+                        case "END-DUPLICATE-SEQUENCES":
+                        case "END-VALID-GROUPS":
+                        case "END-INTERSECTING-POINTS":
+                        case "END-NON-INTERSECTING-POINTS":
+                            section = null;
+                            newBlock = true;
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                    if (newBlock)
+                    {
+                        newBlock = false;
+                        continue;
+                    }
+
+                    // Parse the config item
+                    ConfigurationFileItem aConfigurationItem;
+
+                    // Out of section
+                    if (section == null)
+                    {
+                        Errors.Add(String.Format(ConfigurationErrors.OutOfSectionError, line));
+                    }
+                    // Parse a configuration item.
+                    else if (ConfigurationFileItem.TryParse(line, out aConfigurationItem))
+                    {
+                        // Remove duplicate
                         if (aConfigurationItem.KeyValue != null && ActualKeys.Contains(aConfigurationItem.KeyValue.Key))
                             Errors.Add(String.Format(ConfigurationErrors.DuplicateKeyError, aConfigurationItem.KeyValue.OriginalKeyValue));
+                        // Parse data
                         else
                         {
                             // Record that this key has been found.
@@ -193,7 +277,14 @@ namespace CrozzleApplication
                             // Process the key-value.
                             if (aConfigurationItem.IsLogFile)
                             {
-                                // Get the value representing an invalid score.
+                                // Check section
+                                if(section != SECTION_LOGFILE)
+                                {
+                                    Errors.Add(String.Format(ConfigurationErrors.WrongSectionError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                                    break;
+                                }
+
+                                // Remove delimeter
                                 aConfiguration.LogFileName = aConfigurationItem.KeyValue.Value.Trim();
                                 if (Validator.IsDelimited(aConfiguration.LogFileName, Crozzle.StringDelimiters))
                                 {

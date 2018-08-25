@@ -8,12 +8,15 @@ namespace CrozzleApplication
     {
         #region constants - symbols
         const String NoCrozzleItem = "NO_CROZZLE_ITEM";
-        const String ConfigurationFileSymbol = "CONFIGURATION_FILE";
-        const String WordListFileSymbol = "WORDLIST_FILE";
-        const String RowsSymbol = "ROWS";
-        const String ColumnsSymbol = "COLUMNS";
-        const String RowSymbol = "ROW";
-        const String ColumnSymbol = "COLUMN";
+
+        // Replace 1
+        const String ConfigurationFileSymbol = "CONFIG-DATA";
+        const String WordListFileSymbol = "SEQUENCE-DATA";
+
+        // Replace 2
+        const String SizeSymbol = "SIZE";
+
+        const String SequenceSymbol = "SEQUENCE";
         const String ColonSymbol = ":";
         const String AtoZ = @"^[A-Z]$";
         #endregion
@@ -40,25 +43,17 @@ namespace CrozzleApplication
             get { return (Regex.IsMatch(Name, @"^" + WordListFileSymbol + @"$")); }
         }
 
-        public Boolean IsRows
+        public Boolean IsSize
         {
-            get { return (Regex.IsMatch(Name, @"^" + RowsSymbol + @"$")); }
+            get { return (Regex.IsMatch(Name, @"^" + SizeSymbol + @"$")); }
         }
 
-        public Boolean IsColumns
-        {
-            get { return (Regex.IsMatch(Name, @"^" + ColumnsSymbol + @"$")); }
-        }
-
-        public Boolean IsRow
-        {
             get { return (Regex.IsMatch(Name, @"^" + RowSymbol + @"$")); }
-        }
-
-        public Boolean IsColumn
+        public Boolean IsSequence
         {
-            get { return (Regex.IsMatch(Name, @"^" + ColumnSymbol + @"$")); }
+            get { return (Regex.IsMatch(Name, @"^" + SequenceSymbol + @"$")); }
         }
+        
         #endregion
 
         #region constructors
@@ -82,12 +77,20 @@ namespace CrozzleApplication
                 crozzleFileItem = crozzleFileItem.Trim();
             }
 
+            // Discard empty line
             if (Regex.IsMatch(crozzleFileItem, @"^\s*$"))
             {
                 // Check for only 0 or more white spaces.
                 aCrozzleFileItem.Name = NoCrozzleItem;
             }
-            else if (Regex.IsMatch(crozzleFileItem, @"^" + ConfigurationFileSymbol + @".*"))
+            
+            // Trim non-empty, non-comment line
+            else
+            {
+                crozzleFileItem = crozzleFileItem.Trim();
+            }
+            
+            if (Regex.IsMatch(crozzleFileItem, @"^" + ConfigurationFileSymbol + @".*"))
             {
                 // Get the CONFIGURATION_FILE key-value pair.
                 KeyValue aKeyValue;
@@ -105,25 +108,20 @@ namespace CrozzleApplication
                 aCrozzleFileItem.Name = WordListFileSymbol;
                 aCrozzleFileItem.KeyValue = aKeyValue;
             }
-            else if (Regex.IsMatch(crozzleFileItem, @"^" + RowsSymbol + @".*"))
+
+            // Size
+            else if (Regex.IsMatch(crozzleFileItem, @"^" + SizeSymbol + @".*"))
             {
                 // Get the number of rows for the crozzle.
                 KeyValue aKeyValue;
-                if (!KeyValue.TryParse(crozzleFileItem, RowsSymbol, out aKeyValue))
+                if (!KeyValue.TryParse(crozzleFileItem, SizeSymbol, out aKeyValue))
                     Errors.AddRange(KeyValue.Errors);
-                aCrozzleFileItem.Name = RowsSymbol;
+                aCrozzleFileItem.Name = SizeSymbol;
                 aCrozzleFileItem.KeyValue = aKeyValue;
             }
-            else if (Regex.IsMatch(crozzleFileItem, @"^" + ColumnsSymbol + @".*"))
-            {
-                // Get the number of columns for the crozzle.
-                KeyValue aKeyValue;
-                if (!KeyValue.TryParse(crozzleFileItem, ColumnsSymbol, out aKeyValue))
-                    Errors.AddRange(KeyValue.Errors);
-                aCrozzleFileItem.Name = ColumnsSymbol;
-                aCrozzleFileItem.KeyValue = aKeyValue;
-            }
-            else if (Regex.IsMatch(crozzleFileItem, @"^" + RowSymbol + @".*"))
+
+            // Row - horizontal
+            else if (Regex.IsMatch(crozzleFileItem, @"^" + SequenceSymbol + @".*"))
             {
                 // Get data for a horizontal word.
                 KeyValue aKeyValue;
@@ -138,9 +136,10 @@ namespace CrozzleApplication
                 KeyValue aKeyValue;
                 if (!KeyValue.TryParse(crozzleFileItem, ColumnSymbol, out aKeyValue))
                     Errors.AddRange(KeyValue.Errors);
-                aCrozzleFileItem.Name = ColumnSymbol;
+                aCrozzleFileItem.Name = SequenceSymbol;
                 aCrozzleFileItem.KeyValue = aKeyValue;
             }
+            // Error
             else
                 Errors.Add(String.Format(CrozzleFileItemErrors.SymbolError, crozzleFileItem));
 

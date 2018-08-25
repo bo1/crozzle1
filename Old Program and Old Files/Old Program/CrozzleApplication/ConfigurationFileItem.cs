@@ -8,7 +8,7 @@ namespace CrozzleApplication
     {
         #region constants - symbols
         const String NoConfigItem = "NO_CONFIG_ITEM";
-        const String LogfileName = "LOGFILE_NAME";
+        const String LogfileName = "DEFAULT";
 
         const String MinimumNumberOfUniqueWords = "MINIMUM_NUMBER_OF_UNIQUE_WORDS";
         const String MaximumNumberOfUniqueWords = "MAXIMUM_NUMBER_OF_UNIQUE_WORDS";
@@ -210,6 +210,8 @@ namespace CrozzleApplication
         #region parsing
         public static Boolean TryParse(String configurationFileItem, out ConfigurationFileItem aConfigurationFileItem)
         {
+            configurationFileItem = configurationFileItem.Trim();
+
             Errors = new List<String>();
             configurationFileItem = configurationFileItem.Trim();
             aConfigurationFileItem = new ConfigurationFileItem(configurationFileItem);

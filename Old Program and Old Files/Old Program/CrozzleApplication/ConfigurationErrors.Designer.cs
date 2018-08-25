@@ -19,7 +19,7 @@ namespace CrozzleApplication {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class ConfigurationErrors {
@@ -68,7 +68,7 @@ namespace CrozzleApplication {
                 return ResourceManager.GetString("ColourError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to code 1006: key-value pair ({0}), key already used.
         /// </summary>
@@ -147,6 +147,34 @@ namespace CrozzleApplication {
         internal static string ValueError {
             get {
                 return ResourceManager.GetString("ValueError", resourceCulture);
+            }
+        }
+
+
+        // New errors
+        // Configuration not belong to any section or block
+        internal static string OutOfSectionError
+        {
+            get
+            {
+                return "OutOfSectionError";
+            }
+        }
+
+        // Configuation in wrong section or block
+        internal static string WrongSectionError
+        {
+            get
+            {
+                return "WrongSectionError";
+            }
+        }
+
+        internal static string MixConfigWithComentError
+        {
+            get
+            {
+                return "MixConfigWithComentError";
             }
         }
     }
