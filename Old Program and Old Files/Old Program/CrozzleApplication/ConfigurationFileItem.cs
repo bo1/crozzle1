@@ -10,6 +10,13 @@ namespace CrozzleApplication
         const String NoConfigItem = "NO_CONFIG_ITEM";
         const String LogfileName = "DEFAULT";
 
+        const String MinimumEquals = "MINIMUM=";
+        const String Minimum = "MINIMUM";
+
+        const String MaximumEquals = "MAXIMUM=";
+        const String Maximum = "MAXIMUM";
+        
+
         const String MinimumNumberOfUniqueWords = "MINIMUM_NUMBER_OF_UNIQUE_WORDS";
         const String MaximumNumberOfUniqueWords = "MAXIMUM_NUMBER_OF_UNIQUE_WORDS";
 
@@ -66,14 +73,14 @@ namespace CrozzleApplication
             get { return (Regex.IsMatch(Name, @"^" + LogfileName + @"$")); }
         }
 
-        public Boolean IsMinimumNumberOfUniqueWords
+        public Boolean IsMinimum
         {
-            get { return (Regex.IsMatch(Name, @"^" + MinimumNumberOfUniqueWords + @"$")); }
+            get { return (Regex.IsMatch(Name, @"^" + MinimumEquals + @"$")); }
         }
 
-        public Boolean IsMaximumNumberOfUniqueWords
+        public Boolean IsMaximum
         {
-            get { return (Regex.IsMatch(Name, @"^" + MaximumNumberOfUniqueWords + @"$")); }
+            get { return (Regex.IsMatch(Name, @"^" + MaximumEquals + @"$")); }
         }
 
         public Boolean IsInvalidCrozzleScore
@@ -238,24 +245,29 @@ namespace CrozzleApplication
                 aConfigurationFileItem.Name = LogfileName;
                 aConfigurationFileItem.KeyValue = aKeyValue;
             }
-            else if (Regex.IsMatch(configurationFileItem, @"^" + MinimumNumberOfUniqueWords + @".*"))
+
+            else if (Regex.IsMatch(configurationFileItem, @"^" + Minimum + @".*"))
             {
                 // Get the MinimumNumberOfUniqueWords key-value pair.
                 KeyValue aKeyValue;
-                if (!KeyValue.TryParse(configurationFileItem, MinimumNumberOfUniqueWords, out aKeyValue))
+                if (!KeyValue.TryParse(configurationFileItem, Minimum, out aKeyValue))
                     Errors.AddRange(KeyValue.Errors);
-                aConfigurationFileItem.Name = MinimumNumberOfUniqueWords;
+                aConfigurationFileItem.Name = Minimum;
                 aConfigurationFileItem.KeyValue = aKeyValue;
             }
-            else if (Regex.IsMatch(configurationFileItem, @"^" + MaximumNumberOfUniqueWords + @".*"))
+
+            else if (Regex.IsMatch(configurationFileItem, @"^" + Maximum + @".*"))
             {
-                // Get the MaximumNumberOfUniqueWords key-value pair.
+                // Get the MinimumNumberOfUniqueWords key-value pair.
                 KeyValue aKeyValue;
-                if (!KeyValue.TryParse(configurationFileItem, MaximumNumberOfUniqueWords, out aKeyValue))
+                if (!KeyValue.TryParse(configurationFileItem, Maximum, out aKeyValue))
                     Errors.AddRange(KeyValue.Errors);
-                aConfigurationFileItem.Name = MaximumNumberOfUniqueWords;
+                aConfigurationFileItem.Name = Maximum;
                 aConfigurationFileItem.KeyValue = aKeyValue;
             }
+
+        
+           
             else if (Regex.IsMatch(configurationFileItem, @"^" + InvalidCrozzleScore + @".*"))
             {
                 // Get the CrozzleInvalidScoreValue key-value pair.

@@ -91,6 +91,8 @@ namespace CrozzleApplication
         private static readonly List<string> ExpectedKeys = new List<string>()
         {
             ConfigurationKeys.LOGFILE_NAME,
+            ConfigurationKeys.MINIMUM,
+            ConfigurationKeys.MAXIMUM,
             ConfigurationKeys.MINIMUM_NUMBER_OF_UNIQUE_WORDS,
             ConfigurationKeys.MAXIMUM_NUMBER_OF_UNIQUE_WORDS,
             ConfigurationKeys.INVALID_CROZZLE_SCORE,
@@ -261,11 +263,13 @@ namespace CrozzleApplication
                     {
                         Errors.Add(String.Format(ConfigurationErrors.OutOfSectionError, line));
                     }
+                    
                     // Parse a configuration item.
                     else if (ConfigurationFileItem.TryParse(line, out aConfigurationItem))
                     {
                         // Remove duplicate
-                        if (aConfigurationItem.KeyValue != null && ActualKeys.Contains(aConfigurationItem.KeyValue.Key))
+                        if (aConfigurationItem.KeyValue != null && ActualKeys.Contains(aConfigurationItem.KeyValue.Key)
+                            && !aConfigurationItem.KeyValue.Key.StartsWith("MAXIMUM") && !aConfigurationItem.KeyValue.Key.StartsWith("MINIMUM"))
                             Errors.Add(String.Format(ConfigurationErrors.DuplicateKeyError, aConfigurationItem.KeyValue.OriginalKeyValue));
                         // Parse data
                         else
@@ -295,33 +299,9 @@ namespace CrozzleApplication
                                 else
                                     Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                             }
-                            else if (aConfigurationItem.IsMinimumNumberOfUniqueWords)
-                            {
-                                // Get the value of the minimum number of unique words allowed in the wordlist.
-                                int minimum;
-                                if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out minimum))
-                                {
-                                    aConfiguration.MinimumNumberOfUniqueWords = minimum;
-                                    if (!Validator.TryRange(minimum, 1, Int32.MaxValue))
-                                        Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                                }
-                                else
-                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                            }
-                            else if (aConfigurationItem.IsMaximumNumberOfUniqueWords)
-                            {
-                                // Get the value of the maximum number of unique words allowed in the wordlist.
-                                int maximum;
-                                if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out maximum))
-                                {
-                                    aConfiguration.MaximumNumberOfUniqueWords = maximum;
-                                    if (!Validator.TryRange(maximum, 1, Int32.MaxValue))
-                                        Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                                }
-                                else
-                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
 
-                            }
+                            
+
                             else if (aConfigurationItem.IsInvalidCrozzleScore)
                             {
                                 // Get the value representing an invalid score.
@@ -522,58 +502,7 @@ namespace CrozzleApplication
                                 else
                                     Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                             }
-                            else if (aConfigurationItem.IsMinimumNumberOfTheSameWord)
-                            {
-                                // Get the value of the minimum number of the same word per crozzle limit.
-                                int minimum;
-                                if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out minimum))
-                                {
-                                    aConfiguration.MinimumNumberOfTheSameWord = minimum;
-                                    if (!Validator.TryRange(minimum, 1, Int32.MaxValue))
-                                        Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                                }
-                                else
-                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                            }
-                            else if (aConfigurationItem.IsMaximumNumberOfTheSameWord)
-                            {
-                                // Get the value of the maximum number of the same word per crozzle limit.
-                                int maximum;
-                                if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out maximum))
-                                {
-                                    aConfiguration.MaximumNumberOfTheSameWord = maximum;
-                                    if (!Validator.TryRange(maximum, 1, Int32.MaxValue))
-                                        Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                                }
-                                else
-                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                            }
-                            else if (aConfigurationItem.IsMinimumNumberOfGroups)
-                            {
-                                // Get the value of the minimum number of groups per crozzle limit.
-                                int minimum;
-                                if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out minimum))
-                                {
-                                    aConfiguration.MinimumNumberOfGroups = minimum;
-                                    if (!Validator.TryRange(minimum, 1, Int32.MaxValue))
-                                        Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                                }
-                                else
-                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                            }
-                            else if (aConfigurationItem.IsMaximumNumberOfGroups)
-                            {
-                                // Get the value of the maximum number of groups per crozzle limit.
-                                int maximum;
-                                if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out maximum))
-                                {
-                                    aConfiguration.MaximumNumberOfGroups = maximum;
-                                    if (!Validator.TryRange(maximum, 1, Int32.MaxValue))
-                                        Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                                }
-                                else
-                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                            }
+
                             else if (aConfigurationItem.IsPointsPerWord)
                             {
                                 // Get the value of points per words.
@@ -645,6 +574,77 @@ namespace CrozzleApplication
                                         Errors.AddRange(KeyValue.Errors);
                                 }
                             }
+
+
+                            // Minumum
+                            else if (aConfigurationItem.IsMinimum)
+                            {
+                                // Process value
+                                int minimum;
+                                if (!Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out minimum)) // if not number
+                                {
+                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                                    continue;
+                                }
+                                else if (!Validator.TryRange(minimum, 1, Int32.MaxValue)) // if number out of range
+                                {
+                                    Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                                }
+
+
+                                // Switch + save
+                                switch (section)
+                                {
+                                    case "SEQUENCES-IN-FILE":
+                                        aConfiguration.MaximumNumberOfUniqueWords = minimum;
+                                        break;
+                                    case "DUPLICATE-SEQUENCES":
+                                        aConfiguration.MinimumNumberOfTheSameWord = minimum;
+                                        break;
+                                    case "VALID-GROUPS":
+                                        aConfiguration.MinimumNumberOfGroups = minimum;
+                                        break;
+                                    default:
+                                        Errors.Add(String.Format(ConfigurationErrors.WrongSectionError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0])); ;
+                                        break;
+                                }
+
+                            }
+
+                            // Maximum
+                            else if (aConfigurationItem.IsMaximum)
+                            {
+                                // Process value
+                                int maximum;
+                                if (!Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out maximum)) // if not number
+                                {
+                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                                    continue;
+                                }
+                                else if (!Validator.TryRange(maximum, 1, Int32.MaxValue)) // if number out of range
+                                {
+                                    Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                                }
+
+
+                                // Switch + save
+                                switch (section)
+                                {
+                                    case "SEQUENCES-IN-FILE":
+                                        aConfiguration.MaximumNumberOfUniqueWords = maximum;
+                                        break;
+                                    case "DUPLICATE-SEQUENCES":
+                                        aConfiguration.MinimumNumberOfTheSameWord = maximum;
+                                        break;
+                                    case "VALID-GROUPS":
+                                        aConfiguration.MinimumNumberOfGroups = maximum;
+                                        break;
+                                    default:
+                                        Errors.Add(String.Format(ConfigurationErrors.WrongSectionError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0])); ;
+                                        break;
+                                }
+
+                            }
                         }
                     }
                     else
@@ -656,7 +656,7 @@ namespace CrozzleApplication
 
                 // Check which keys are missing from the configuration file.
                 foreach (string expectedKey in ExpectedKeys)
-                    if (!ActualKeys.Contains(expectedKey))
+                    if (!ActualKeys.Contains(expectedKey) && !expectedKey.StartsWith("MINIMUM") && !expectedKey.StartsWith("MAXIMUM"))
                         Errors.Add(String.Format(ConfigurationErrors.MissingKeyError, expectedKey));
                 for (char ch = 'A'; ch <= 'Z'; ch++)
                     if (!ActualIntersectingKeys[(int)ch - (int)'A'])

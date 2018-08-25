@@ -119,7 +119,7 @@ namespace CrozzleApplication
                 aCrozzleFileItem.KeyValue = aKeyValue;
             }
 
-            // Row - horizontal
+            // Row and column
             else if (Regex.IsMatch(crozzleFileItem, @"^" + SequenceSymbol + @".*"))
             {
                 // Get data for a horizontal word.

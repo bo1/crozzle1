@@ -302,5 +302,21 @@ namespace CrozzleApplication {
                 return ResourceManager.GetString("UPPERCASE", resourceCulture);
             }
         }
+
+        internal static string MAXIMUM
+        {
+            get
+            {
+                return "MAXIMUM";
+            }
+        }
+
+        internal static string MINIMUM
+        {
+            get
+            {
+                return "MINIMUM";
+            }
+        }
     }
 }
