@@ -48,7 +48,6 @@ namespace CrozzleApplication
             get { return (Regex.IsMatch(Name, @"^" + SizeSymbol + @"$")); }
         }
 
-            get { return (Regex.IsMatch(Name, @"^" + RowSymbol + @"$")); }
         public Boolean IsSequence
         {
             get { return (Regex.IsMatch(Name, @"^" + SequenceSymbol + @"$")); }
@@ -125,16 +124,7 @@ namespace CrozzleApplication
             {
                 // Get data for a horizontal word.
                 KeyValue aKeyValue;
-                if (!KeyValue.TryParse(crozzleFileItem, RowSymbol, out aKeyValue))
-                    Errors.AddRange(KeyValue.Errors);
-                aCrozzleFileItem.Name = RowSymbol;
-                aCrozzleFileItem.KeyValue = aKeyValue;
-            }
-            else if (Regex.IsMatch(crozzleFileItem, @"^" + ColumnSymbol + @".*"))
-            {
-                // Get data for a vertical word.
-                KeyValue aKeyValue;
-                if (!KeyValue.TryParse(crozzleFileItem, ColumnSymbol, out aKeyValue))
+                if (!KeyValue.TryParse(crozzleFileItem, SequenceSymbol, out aKeyValue))
                     Errors.AddRange(KeyValue.Errors);
                 aCrozzleFileItem.Name = SequenceSymbol;
                 aCrozzleFileItem.KeyValue = aKeyValue;
