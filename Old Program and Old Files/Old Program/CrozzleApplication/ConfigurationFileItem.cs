@@ -20,17 +20,25 @@ namespace CrozzleApplication
         const String MinimumNumberOfUniqueWords = "MINIMUM_NUMBER_OF_UNIQUE_WORDS";
         const String MaximumNumberOfUniqueWords = "MAXIMUM_NUMBER_OF_UNIQUE_WORDS";
 
-        const String InvalidCrozzleScore = "INVALID_CROZZLE_SCORE";
+        const String InvalidCrozzleScore = "INVALID-CROZZLE-SCORE";
         const String Uppercase = "UPPERCASE";
         const String Style = "STYLE";
-        const String BGcolourEmptyTD = "BGCOLOUR_EMPTY_TD";
-        const String BGcolourNonEmptyTD = "BGCOLOUR_NON_EMPTY_TD";
+        const String BGcolourEmptyTD = "BGCOLOUR-EMPTY-TD";
+        const String BGcolourNonEmptyTD = "BGCOLOUR-NON-EMPTY-TD";
 
-        const String MinimumNumberOfRows = "MINIMUM_NUMBER_OF_ROWS";
-        const String MaximumNumberOfRows = "MAXIMUM_NUMBER_OF_ROWS";
-        const String MinimumNumberOfColumns = "MINIMUM_NUMBER_OF_COLUMNS";
-        const String MaximumNumberOfColumns = "MAXIMUM_NUMBER_OF_COLUMNS";
+        const String MinimumNumberOfRows = "MINIMUM-ROWS";
+        const String MaximumNumberOfRows = "MAXIMUM-ROWS";
+        const String MinimumNumberOfColumns = "MINIMUM-COLUMNS";
+        const String MaximumNumberOfColumns = "MAXIMUM-COLUMNS";
 
+        // New min max vertical horozontal start
+        const String MinimumHorizontal = "MINIMUM-HORIZONTAL";
+        const String MinimumVertical = "MINIMUM-VERTICAL";
+        const String MaximumHorizontal = "MAXIMUM-HORIZONTAL";
+        const String MaximumVertical = "MAXIMUM-VERTICAL";
+        // New min max vertical horozontal end
+
+        // Old min max vertical horozontal start
         const String MinimumHorizontalWords = "MINIMUM_HORIZONTAL_WORDS";
         const String MinimumVerticalWords = "MINIMUM_VERTICAL_WORDS";
         const String MaximumHorizontalWords = "MAXIMUM_HORIZONTAL_WORDS";
@@ -40,6 +48,7 @@ namespace CrozzleApplication
         const String MaximumIntersectionsInHorizontalWord = "MAXIMUM_INTERSECTIONS_IN_HORIZONTAL_WORD";
         const String MinimumIntersectionsInVerticalWord = "MINIMUM_INTERSECTIONS_IN_VERTICAL_WORD";
         const String MaximumIntersectionsInVerticalWord = "MAXIMUM_INTERSECTIONS_IN_VERTICAL_WORD";
+        // Old min max vertical horozontal end
 
         const String MinimumNumberOfTheSameWord = "MINIMUM_NUMBER_OF_THE_SAME_WORD";
         const String MaximumNumberOfTheSameWord = "MAXIMUM_NUMBER_OF_THE_SAME_WORD";
@@ -75,12 +84,12 @@ namespace CrozzleApplication
 
         public Boolean IsMinimum
         {
-            get { return (Regex.IsMatch(Name, @"^" + MinimumEquals + @"$")); }
+            get { return OriginalItem.StartsWith(MinimumEquals); }
         }
 
         public Boolean IsMaximum
         {
-            get { return (Regex.IsMatch(Name, @"^" + MaximumEquals + @"$")); }
+            get { return OriginalItem.StartsWith(MaximumEquals); }
         }
 
         public Boolean IsInvalidCrozzleScore
@@ -128,6 +137,29 @@ namespace CrozzleApplication
             get { return (Regex.IsMatch(Name, @"^" + MaximumNumberOfColumns + @"$")); }
         }
 
+        // New min max horizontal vertical start
+        public Boolean IsMinimumHorizontal
+        {
+            get { return (Regex.IsMatch(Name, @"^" + MinimumHorizontal + @"$")); }
+        }
+
+        public Boolean IsMaximumHorizontal
+        {
+            get { return (Regex.IsMatch(Name, @"^" + MaximumHorizontal + @"$")); }
+        }
+
+        public Boolean IsMinimumVertical
+        {
+            get { return (Regex.IsMatch(Name, @"^" + MinimumVertical + @"$")); }
+        }
+
+        public Boolean IsMaximumVertical
+        {
+            get { return (Regex.IsMatch(Name, @"^" + MaximumVertical + @"$")); }
+        }
+        // New min max horizontal vertical end
+
+        // Old min max horizontal vertical start
         public Boolean IsMinimumHorizontalWords
         {
             get { return (Regex.IsMatch(Name, @"^" + MinimumHorizontalWords + @"$")); }
@@ -167,6 +199,7 @@ namespace CrozzleApplication
         {
             get { return (Regex.IsMatch(Name, @"^" + MaximumIntersectionsInVerticalWord + @"$")); }
         }
+        // Old min max horizontal vertical end
 
         public Boolean IsMinimumNumberOfTheSameWord
         {
@@ -246,28 +279,6 @@ namespace CrozzleApplication
                 aConfigurationFileItem.KeyValue = aKeyValue;
             }
 
-            else if (Regex.IsMatch(configurationFileItem, @"^" + Minimum + @".*"))
-            {
-                // Get the MinimumNumberOfUniqueWords key-value pair.
-                KeyValue aKeyValue;
-                if (!KeyValue.TryParse(configurationFileItem, Minimum, out aKeyValue))
-                    Errors.AddRange(KeyValue.Errors);
-                aConfigurationFileItem.Name = Minimum;
-                aConfigurationFileItem.KeyValue = aKeyValue;
-            }
-
-            else if (Regex.IsMatch(configurationFileItem, @"^" + Maximum + @".*"))
-            {
-                // Get the MinimumNumberOfUniqueWords key-value pair.
-                KeyValue aKeyValue;
-                if (!KeyValue.TryParse(configurationFileItem, Maximum, out aKeyValue))
-                    Errors.AddRange(KeyValue.Errors);
-                aConfigurationFileItem.Name = Maximum;
-                aConfigurationFileItem.KeyValue = aKeyValue;
-            }
-
-        
-           
             else if (Regex.IsMatch(configurationFileItem, @"^" + InvalidCrozzleScore + @".*"))
             {
                 // Get the CrozzleInvalidScoreValue key-value pair.
@@ -349,6 +360,47 @@ namespace CrozzleApplication
                 aConfigurationFileItem.Name = MaximumNumberOfColumns;
                 aConfigurationFileItem.KeyValue = aKeyValue;
             }
+
+            else if (Regex.IsMatch(configurationFileItem, @"^" + MinimumHorizontal + @".*"))
+            {
+                // Get the MinimumHorizontalWords key-value pair.
+                KeyValue aKeyValue;
+                if (!KeyValue.TryParse(configurationFileItem, MinimumHorizontal, out aKeyValue))
+                    Errors.AddRange(KeyValue.Errors);
+                aConfigurationFileItem.Name = MinimumHorizontal;
+                aConfigurationFileItem.KeyValue = aKeyValue;
+            }
+
+            else if (Regex.IsMatch(configurationFileItem, @"^" + MinimumVertical + @".*"))
+            {
+                // Get the MinimumHorizontalWords key-value pair.
+                KeyValue aKeyValue;
+                if (!KeyValue.TryParse(configurationFileItem, MinimumVertical, out aKeyValue))
+                    Errors.AddRange(KeyValue.Errors);
+                aConfigurationFileItem.Name = MinimumVertical;
+                aConfigurationFileItem.KeyValue = aKeyValue;
+            }
+
+            else if (Regex.IsMatch(configurationFileItem, @"^" + MaximumHorizontal + @".*"))
+            {
+                // Get the MinimumHorizontalWords key-value pair.
+                KeyValue aKeyValue;
+                if (!KeyValue.TryParse(configurationFileItem, MaximumHorizontal, out aKeyValue))
+                    Errors.AddRange(KeyValue.Errors);
+                aConfigurationFileItem.Name = MaximumHorizontal;
+                aConfigurationFileItem.KeyValue = aKeyValue;
+            }
+
+            else if (Regex.IsMatch(configurationFileItem, @"^" + MaximumVertical + @".*"))
+            {
+                // Get the MinimumHorizontalWords key-value pair.
+                KeyValue aKeyValue;
+                if (!KeyValue.TryParse(configurationFileItem, MaximumVertical, out aKeyValue))
+                    Errors.AddRange(KeyValue.Errors);
+                aConfigurationFileItem.Name = MaximumVertical;
+                aConfigurationFileItem.KeyValue = aKeyValue;
+            }
+
             else if (Regex.IsMatch(configurationFileItem, @"^" + MinimumHorizontalWords + @".*"))
             {
                 // Get the MinimumHorizontalWords key-value pair.
@@ -484,8 +536,31 @@ namespace CrozzleApplication
                 aConfigurationFileItem.Name = NonIntersectingPointsPerLetter;
                 aConfigurationFileItem.KeyValue = aKeyValue;
             }
+
+            else if (Regex.IsMatch(configurationFileItem, @"^" + Minimum + @".*"))
+            {
+                // Get the MinimumNumberOfUniqueWords key-value pair.
+                KeyValue aKeyValue;
+                if (!KeyValue.TryParse(configurationFileItem, Minimum, out aKeyValue))
+                    Errors.AddRange(KeyValue.Errors);
+                aConfigurationFileItem.Name = Minimum;
+                aConfigurationFileItem.KeyValue = aKeyValue;
+            }
+
+            else if (Regex.IsMatch(configurationFileItem, @"^" + Maximum + @".*"))
+            {
+                // Get the MinimumNumberOfUniqueWords key-value pair.
+                KeyValue aKeyValue;
+                if (!KeyValue.TryParse(configurationFileItem, Maximum, out aKeyValue))
+                    Errors.AddRange(KeyValue.Errors);
+                aConfigurationFileItem.Name = Maximum;
+                aConfigurationFileItem.KeyValue = aKeyValue;
+            }
+
             else
+            {
                 Errors.Add(String.Format(ConfigurationFileItemErrors.SymbolError, configurationFileItem));
+            }
 
             aConfigurationFileItem.Valid = Errors.Count == 0;
             return (aConfigurationFileItem.Valid);

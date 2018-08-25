@@ -65,7 +65,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string BGCOLOUR_EMPTY_TD {
             get {
-                return ResourceManager.GetString("BGCOLOUR_EMPTY_TD", resourceCulture);
+                return "BGCOLOUR-EMPTY-TD";
             }
         }
         
@@ -74,7 +74,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string BGCOLOUR_NON_EMPTY_TD {
             get {
-                return ResourceManager.GetString("BGCOLOUR_NON_EMPTY_TD", resourceCulture);
+                return "BGCOLOUR-NON-EMPTY-TD";
             }
         }
         
@@ -92,7 +92,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string INVALID_CROZZLE_SCORE {
             get {
-                return ResourceManager.GetString("INVALID_CROZZLE_SCORE", resourceCulture);
+                return "INVALID-CROZZLE-SCORE";
             }
         }
         
@@ -101,7 +101,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string LOGFILE_NAME {
             get {
-                return ResourceManager.GetString("LOGFILE_NAME", resourceCulture);
+                return "DEFAULT";
             }
         }
         
@@ -110,7 +110,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MAXIMUM_HORIZONTAL_WORDS {
             get {
-                return ResourceManager.GetString("MAXIMUM_HORIZONTAL_WORDS", resourceCulture);
+                return "MAXIMUM-HORIZONTAL";
             }
         }
         
@@ -119,7 +119,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MAXIMUM_INTERSECTIONS_IN_HORIZONTAL_WORDS {
             get {
-                return ResourceManager.GetString("MAXIMUM_INTERSECTIONS_IN_HORIZONTAL_WORDS", resourceCulture);
+                return "MAXIMUM-HORIZONTAL";
             }
         }
         
@@ -128,7 +128,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MAXIMUM_INTERSECTIONS_IN_VERTICAL_WORDS {
             get {
-                return ResourceManager.GetString("MAXIMUM_INTERSECTIONS_IN_VERTICAL_WORDS", resourceCulture);
+                return "MAXIMUM-VERTICAL";
             }
         }
         
@@ -137,7 +137,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MAXIMUM_NUMBER_OF_COLUMNS {
             get {
-                return ResourceManager.GetString("MAXIMUM_NUMBER_OF_COLUMNS", resourceCulture);
+                return "MAXIMUM-COLUMNS";
             }
         }
         
@@ -146,7 +146,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MAXIMUM_NUMBER_OF_GROUPS {
             get {
-                return ResourceManager.GetString("MAXIMUM_NUMBER_OF_GROUPS", resourceCulture);
+                return "MAXIMUM";
             }
         }
         
@@ -155,7 +155,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MAXIMUM_NUMBER_OF_ROWS {
             get {
-                return ResourceManager.GetString("MAXIMUM_NUMBER_OF_ROWS", resourceCulture);
+                return "MAXIMUM-ROWS";
             }
         }
         
@@ -164,7 +164,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MAXIMUM_NUMBER_OF_THE_SAME_WORD {
             get {
-                return ResourceManager.GetString("MAXIMUM_NUMBER_OF_THE_SAME_WORD", resourceCulture);
+                return "MAXIMUM";
             }
         }
         
@@ -173,7 +173,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MAXIMUM_NUMBER_OF_UNIQUE_WORDS {
             get {
-                return ResourceManager.GetString("MAXIMUM_NUMBER_OF_UNIQUE_WORDS", resourceCulture);
+                return "MAXIMUM";
             }
         }
         
@@ -182,7 +182,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MAXIMUM_VERTICAL_WORDS {
             get {
-                return ResourceManager.GetString("MAXIMUM_VERTICAL_WORDS", resourceCulture);
+                return "MAXIMUM-VERTICAL";
             }
         }
         
@@ -191,7 +191,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MINIMUM_HORIZONTAL_WORDS {
             get {
-                return ResourceManager.GetString("MINIMUM_HORIZONTAL_WORDS", resourceCulture);
+                return "MINIMUM-HORIZONTAL";
             }
         }
         
@@ -200,7 +200,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MINIMUM_INTERSECTIONS_IN_HORIZONTAL_WORDS {
             get {
-                return ResourceManager.GetString("MINIMUM_INTERSECTIONS_IN_HORIZONTAL_WORDS", resourceCulture);
+                return "MINIMUM-HORIZONTAL";
             }
         }
         
@@ -209,7 +209,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MINIMUM_INTERSECTIONS_IN_VERTICAL_WORDS {
             get {
-                return ResourceManager.GetString("MINIMUM_INTERSECTIONS_IN_VERTICAL_WORDS", resourceCulture);
+                return "MINIMUM-VERTICAL";
             }
         }
         
@@ -218,7 +218,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MINIMUM_NUMBER_OF_COLUMNS {
             get {
-                return ResourceManager.GetString("MINIMUM_NUMBER_OF_COLUMNS", resourceCulture);
+                return "MINIMUM-COLUMNS";
             }
         }
         
@@ -227,7 +227,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MINIMUM_NUMBER_OF_GROUPS {
             get {
-                return ResourceManager.GetString("MINIMUM_NUMBER_OF_GROUPS", resourceCulture);
+                return "MINIMUM";
             }
         }
         
@@ -236,7 +236,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MINIMUM_NUMBER_OF_ROWS {
             get {
-                return ResourceManager.GetString("MINIMUM_NUMBER_OF_ROWS", resourceCulture);
+                return "MINIMUM-ROWS";
             }
         }
         
@@ -245,7 +245,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MINIMUM_NUMBER_OF_THE_SAME_WORD {
             get {
-                return ResourceManager.GetString("MINIMUM_NUMBER_OF_THE_SAME_WORD", resourceCulture);
+                return "MINIMUM";
             }
         }
         
@@ -254,7 +254,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MINIMUM_NUMBER_OF_UNIQUE_WORDS {
             get {
-                return ResourceManager.GetString("MINIMUM_NUMBER_OF_UNIQUE_WORDS", resourceCulture);
+                return "MINIMUM";
             }
         }
         
@@ -263,7 +263,7 @@ namespace CrozzleApplication {
         /// </summary>
         internal static string MINIMUM_VERTICAL_WORDS {
             get {
-                return ResourceManager.GetString("MINIMUM_VERTICAL_WORDS", resourceCulture);
+                return "MINIMUM-VERTICAL";
             }
         }
         

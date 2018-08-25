@@ -13,16 +13,27 @@ namespace CrozzleApplication
         public static String allowedBooleans = @"^(true|false)$";
         private static readonly Char[] PointSeparators = new Char[] { ',' };
 
-        public static string SECTION_LOGFILE = "LOGFILE";
-        public static string SECTION_SEQUENCES_IN_FILE = "SEQUENCES-IN-FILE";
-        public static string SECTION_CROZZLE_OUTPUT = "CROZZLE-OUTPUT";
-        public static string SECTION_CROZZLE_SIZE = "CROZZLE-SIZE";
-        public static string SECTION_SEQUENCES_IN_CROZZLE = "SEQUENCES-IN-CROZZLE";
-        public static string SECTION_INTERSECTIONS_IN_SEQUENCE = "INTERSECTIONS-IN-SEQUENCE";
-        public static string SECTION_DUPLICATE_SEQUENCES = "DUPLICATE-SEQUENCES";
-        public static string SECTION_VALID_GROUPS = "VALID-GROUPS";
-        public static string SECTION_INTERSECTING_POINTS = "INTERSECTING-POINTS";
-        public static string SECTION_NON_INTERSECTING_POINTS = "NON-INTERSECTING-POINTS";
+        public const string SECTION_LOGFILE = "LOGFILE";
+        public const string SECTION_SEQUENCES_IN_FILE = "SEQUENCES-IN-FILE";
+        public const string SECTION_CROZZLE_OUTPUT = "CROZZLE-OUTPUT";
+        public const string SECTION_CROZZLE_SIZE = "CROZZLE-SIZE";
+        public const string SECTION_SEQUENCES_IN_CROZZLE = "SEQUENCES-IN-CROZZLE";
+        public const string SECTION_INTERSECTIONS_IN_SEQUENCES = "INTERSECTIONS-IN-SEQUENCES";
+        public const string SECTION_DUPLICATE_SEQUENCES = "DUPLICATE-SEQUENCES";
+        public const string SECTION_VALID_GROUPS = "VALID-GROUPS";
+        public const string SECTION_INTERSECTING_POINTS = "INTERSECTING-POINTS";
+        public const string SECTION_NON_INTERSECTING_POINTS = "NON-INTERSECTING-POINTS";
+
+        public const string SECTION_END_LOGFILE = "END-LOGFILE";
+        public const string SECTION_END_SEQUENCES_IN_FILE = "END-SEQUENCES-IN-FILE";
+        public const string SECTION_END_CROZZLE_OUTPUT = "END-CROZZLE-OUTPUT";
+        public const string SECTION_END_CROZZLE_SIZE = "END-CROZZLE-SIZE";
+        public const string SECTION_END_SEQUENCES_IN_CROZZLE = "END-SEQUENCES-IN-CROZZLE";
+        public const string SECTION_END_INTERSECTIONS_IN_SEQUENCES = "END-INTERSECTIONS-IN-SEQUENCES";
+        public const string SECTION_END_DUPLICATE_SEQUENCES = "END-DUPLICATE-SEQUENCES";
+        public const string SECTION_END_VALID_GROUPS = "END-VALID-GROUPS";
+        public const string SECTION_END_INTERSECTING_POINTS = "END-INTERSECTING-POINTS";
+        public const string SECTION_END_NON_INTERSECTING_POINTS = "END-NON-INTERSECTING-POINTS";
         #endregion
 
         #region properties - errors
@@ -116,9 +127,9 @@ namespace CrozzleApplication
             ConfigurationKeys.MAXIMUM_NUMBER_OF_THE_SAME_WORD,
             ConfigurationKeys.MINIMUM_NUMBER_OF_GROUPS,
             ConfigurationKeys.MAXIMUM_NUMBER_OF_GROUPS,
-            ConfigurationKeys.POINTS_PER_WORD,
-            ConfigurationKeys.INTERSECTING_POINTS_PER_LETTER,
-            ConfigurationKeys.NON_INTERSECTING_POINTS_PER_LETTER
+            //ConfigurationKeys.POINTS_PER_WORD,
+            //ConfigurationKeys.INTERSECTING_POINTS_PER_LETTER,
+            //ConfigurationKeys.NON_INTERSECTING_POINTS_PER_LETTER
         };
         #endregion
 
@@ -187,6 +198,7 @@ namespace CrozzleApplication
             // Open file
             else
             {
+                aConfiguration.PointsPerWord = 0;
                 StreamReader fileIn = new StreamReader(path);
                 String section = null;
                 bool newBlock = false; 
@@ -219,29 +231,29 @@ namespace CrozzleApplication
                     // Section check
                     switch (line)
                     {
-                        case "LOGFILE":
-                        case "SEQUENCES-IN-FILE":
-                        case "CROZZLE-OUTPUT":
-                        case "CROZZLE-SIZE":
-                        case "SEQUENCES-IN-CROZZLE":
-                        case "INTERSECTIONS-IN-SEQUENCES":
-                        case "DUPLICATE-SEQUENCES":
-                        case "VALID-GROUPS":
-                        case "INTERSECTING-POINTS":
-                        case "NON-INTERSECTING-POINTS":
+                        case SECTION_LOGFILE:
+                        case SECTION_SEQUENCES_IN_FILE:
+                        case SECTION_CROZZLE_OUTPUT:
+                        case SECTION_CROZZLE_SIZE:
+                        case SECTION_SEQUENCES_IN_CROZZLE:
+                        case SECTION_INTERSECTIONS_IN_SEQUENCES:
+                        case SECTION_DUPLICATE_SEQUENCES:
+                        case SECTION_VALID_GROUPS:
+                        case SECTION_INTERSECTING_POINTS:
+                        case SECTION_NON_INTERSECTING_POINTS:
                             section = line;
                             newBlock = true;
                             break;
-                        case "END-LOGFILE":
-                        case "END-SEQUENCES-IN-FILE":
-                        case "END-CROZZLE-OUTPUT":
-                        case "END-CROZZLE-SIZE":
-                        case "END-SEQUENCES-IN-CROZZLE":
-                        case "END-INTERSECTIONS-IN-SEQUENCES":
-                        case "END-DUPLICATE-SEQUENCES":
-                        case "END-VALID-GROUPS":
-                        case "END-INTERSECTING-POINTS":
-                        case "END-NON-INTERSECTING-POINTS":
+                        case SECTION_END_LOGFILE:
+                        case SECTION_END_SEQUENCES_IN_FILE:
+                        case SECTION_END_CROZZLE_OUTPUT:
+                        case SECTION_END_CROZZLE_SIZE:
+                        case SECTION_END_SEQUENCES_IN_CROZZLE:
+                        case SECTION_END_INTERSECTIONS_IN_SEQUENCES:
+                        case SECTION_END_DUPLICATE_SEQUENCES:
+                        case SECTION_END_VALID_GROUPS:
+                        case SECTION_END_INTERSECTING_POINTS:
+                        case SECTION_END_NON_INTERSECTING_POINTS:
                             section = null;
                             newBlock = true;
                             break;
@@ -263,7 +275,47 @@ namespace CrozzleApplication
                     {
                         Errors.Add(String.Format(ConfigurationErrors.OutOfSectionError, line));
                     }
-                    
+
+                    // Parse intersecting points
+                    else if (section == SECTION_INTERSECTING_POINTS)
+                    {
+                        KeyValue aKeyValue;
+                        if (KeyValue.TryParse(line, @"[A-Z]", out aKeyValue))
+                        {
+                            int points;
+                            if (Validator.IsInt32(aKeyValue.Value, out points))
+                            {
+                                int index = (int)aKeyValue.Key[0] - (int)'A';
+                                aConfiguration.IntersectingPointsPerLetter[index] = points;
+                                ActualIntersectingKeys[index] = true;
+                            }
+                            else
+                                Errors.Add(String.Format(ConfigurationErrors.ValueError, aKeyValue.OriginalKeyValue, Validator.Errors[0]));
+                        }
+                        else
+                            Errors.AddRange(KeyValue.Errors);
+                    }
+
+                    // Parse non intersecting points
+                    else if (section == SECTION_NON_INTERSECTING_POINTS)
+                    {
+                        KeyValue aKeyValue;
+                        if (KeyValue.TryParse(line, @"[A-Z]", out aKeyValue))
+                        {
+                            int points;
+                            if (Validator.IsInt32(aKeyValue.Value, out points))
+                            {
+                                int index = (int)aKeyValue.Key[0] - (int)'A';
+                                aConfiguration.NonIntersectingPointsPerLetter[index] = points;
+                                ActualNonIntersectingKeys[index] = true;
+                            }
+                            else
+                                Errors.Add(String.Format(ConfigurationErrors.ValueError, aKeyValue.OriginalKeyValue, Validator.Errors[0]));
+                        }
+                        else
+                            Errors.AddRange(KeyValue.Errors);
+                    }
+
                     // Parse a configuration item.
                     else if (ConfigurationFileItem.TryParse(line, out aConfigurationItem))
                     {
@@ -275,14 +327,14 @@ namespace CrozzleApplication
                         else
                         {
                             // Record that this key has been found.
-                            if(aConfigurationItem.KeyValue != null)
+                            if (aConfigurationItem.KeyValue != null)
                                 ActualKeys.Add(aConfigurationItem.KeyValue.Key);
 
                             // Process the key-value.
                             if (aConfigurationItem.IsLogFile)
                             {
                                 // Check section
-                                if(section != SECTION_LOGFILE)
+                                if (section != SECTION_LOGFILE)
                                 {
                                     Errors.Add(String.Format(ConfigurationErrors.WrongSectionError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                     break;
@@ -300,7 +352,7 @@ namespace CrozzleApplication
                                     Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                             }
 
-                            
+
 
                             else if (aConfigurationItem.IsInvalidCrozzleScore)
                             {
@@ -353,7 +405,7 @@ namespace CrozzleApplication
                                 if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out minimum))
                                 {
                                     aConfiguration.MinimumNumberOfRows = minimum;
-                                    if (!Validator.TryRange(minimum, 1, Int32.MaxValue))
+                                    if (!Validator.TryRange(minimum, 0, Int32.MaxValue))
                                         Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                 }
                                 else
@@ -366,7 +418,7 @@ namespace CrozzleApplication
                                 if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out maximum))
                                 {
                                     aConfiguration.MaximumNumberOfRows = maximum;
-                                    if (!Validator.TryRange(maximum, 1, Int32.MaxValue))
+                                    if (!Validator.TryRange(maximum, 0, Int32.MaxValue))
                                         Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                 }
                                 else
@@ -379,7 +431,7 @@ namespace CrozzleApplication
                                 if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out minimum))
                                 {
                                     aConfiguration.MinimumNumberOfColumns = minimum;
-                                    if (!Validator.TryRange(minimum, 1, Int32.MaxValue))
+                                    if (!Validator.TryRange(minimum, 0, Int32.MaxValue))
                                         Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                 }
                                 else
@@ -392,111 +444,115 @@ namespace CrozzleApplication
                                 if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out maximum))
                                 {
                                     aConfiguration.MaximumNumberOfColumns = maximum;
-                                    if (!Validator.TryRange(maximum, 1, Int32.MaxValue))
+                                    if (!Validator.TryRange(maximum, 0, Int32.MaxValue))
                                         Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                 }
                                 else
                                     Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                             }
-                            else if (aConfigurationItem.IsMinimumHorizontalWords)
+
+                            // Min - horizontal
+                            else if (aConfigurationItem.IsMinimumHorizontal)
                             {
                                 // Get the value of the minimum number of horizontal words in a crozzle.
                                 int minimum;
                                 if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out minimum))
                                 {
-                                    aConfiguration.MinimumHorizontalWords = minimum;
-                                    if (!Validator.TryRange(minimum, 1, Int32.MaxValue))
+                                    // Check section for output destination
+                                    switch (section)
+                                    {
+                                        case SECTION_SEQUENCES_IN_CROZZLE:
+                                            aConfiguration.MinimumHorizontalWords = minimum;
+                                            break;
+                                        case SECTION_INTERSECTIONS_IN_SEQUENCES:
+                                            aConfiguration.MinimumIntersectionsInHorizontalWords = minimum;
+                                            break;
+                                        default:
+                                            Errors.Add(String.Format(ConfigurationErrors.WrongSectionError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                                            break;
+                                    }
+                                    if (!Validator.TryRange(minimum, 0, Int32.MaxValue))
                                         Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                 }
                                 else
                                     Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                             }
-                            else if (aConfigurationItem.IsMaximumHorizontalWords)
+
+                            // Max - horizontal
+                            else if (aConfigurationItem.IsMaximumHorizontal)
                             {
-                                // Get the value of the maximum number of horizontal words in a crozzle.
-                                int maximum;
-                                if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out maximum))
-                                {
-                                    aConfiguration.MaximumHorizontalWords = maximum;
-                                    if (!Validator.TryRange(maximum, 1, Int32.MaxValue))
-                                        Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                                }
-                                else
-                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                            }
-                            else if (aConfigurationItem.IsMinimumVerticalWords)
-                            {
-                                // Get the value of the minimum number of vertical words in a crozzle.
+                                // Get the value of the minimum number of horizontal words in a crozzle.
                                 int minimum;
                                 if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out minimum))
                                 {
-                                    aConfiguration.MinimumVerticalWords = minimum;
-                                    if (!Validator.TryRange(minimum, 1, Int32.MaxValue))
+                                    // Check section for output destination
+                                    switch (section)
+                                    {
+                                        case SECTION_SEQUENCES_IN_CROZZLE:
+                                            aConfiguration.MaximumHorizontalWords = minimum;
+                                            break;
+                                        case SECTION_INTERSECTIONS_IN_SEQUENCES:
+                                            aConfiguration.MaximumIntersectionsInHorizontalWords = minimum;
+                                            break;
+                                        default:
+                                            Errors.Add(String.Format(ConfigurationErrors.WrongSectionError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                                            break;
+                                    }
+                                    if (!Validator.TryRange(minimum, 0, Int32.MaxValue))
                                         Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                 }
                                 else
                                     Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                             }
-                            else if (aConfigurationItem.IsMaximumVerticalWords)
+
+                            // Min - vertical
+                            else if (aConfigurationItem.IsMinimumVertical)
                             {
-                                // Get the value of the maximum number of vertical words in a crozzle.
-                                int maximum;
-                                if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out maximum))
-                                {
-                                    aConfiguration.MaximumVerticalWords = maximum;
-                                    if (!Validator.TryRange(maximum, 1, Int32.MaxValue))
-                                        Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                                }
-                                else
-                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                            }
-                            else if (aConfigurationItem.IsMinimumIntersectionsInHorizontalWords)
-                            {
-                                // Get the value of the minimum number of the intersections in a horizontal word.
+                                // Get the value of the minimum number of horizontal words in a crozzle.
                                 int minimum;
                                 if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out minimum))
                                 {
-                                    aConfiguration.MinimumIntersectionsInHorizontalWords = minimum;
-                                    if (!Validator.TryRange(minimum, 1, Int32.MaxValue))
+                                    // Check section for output destination
+                                    switch (section)
+                                    {
+                                        case SECTION_SEQUENCES_IN_CROZZLE:
+                                            aConfiguration.MinimumVerticalWords = minimum;
+                                            break;
+                                        case SECTION_INTERSECTIONS_IN_SEQUENCES:
+                                            aConfiguration.MinimumIntersectionsInVerticalWords = minimum;
+                                            break;
+                                        default:
+                                            Errors.Add(String.Format(ConfigurationErrors.WrongSectionError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                                            break;
+                                    }
+                                    if (!Validator.TryRange(minimum, 0, Int32.MaxValue))
                                         Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                 }
                                 else
                                     Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                             }
-                            else if (aConfigurationItem.IsMaximumIntersectionsInHorizontalWords)
+
+                            // Max - vertical
+                            else if (aConfigurationItem.IsMaximumVertical)
                             {
-                                // Get the value of the maximum number of the intersections in a horizontal word.
-                                int maximum;
-                                if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out maximum))
-                                {
-                                    aConfiguration.MaximumIntersectionsInHorizontalWords = maximum;
-                                    if (!Validator.TryRange(maximum, 1, Int32.MaxValue))
-                                        Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                                }
-                                else
-                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                            }
-                            else if (aConfigurationItem.IsMinimumIntersectionsInVerticalWords)
-                            {
-                                // Get the value of the minimum number of the intersections in a vertical word.
+                                // Get the value of the minimum number of horizontal words in a crozzle.
                                 int minimum;
                                 if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out minimum))
                                 {
-                                    aConfiguration.MinimumIntersectionsInVerticalWords = minimum;
-                                    if (!Validator.TryRange(minimum, 1, Int32.MaxValue))
-                                        Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                                }
-                                else
-                                    Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
-                            }
-                            else if (aConfigurationItem.IsMaximumIntersectionsInVerticalWords)
-                            {
-                                // Get the value of the maximum number of the intersections in a vertical word.
-                                int maximum;
-                                if (Validator.IsInt32(aConfigurationItem.KeyValue.Value.Trim(), out maximum))
-                                {
-                                    aConfiguration.MaximumIntersectionsInVerticalWords = maximum;
-                                    if (!Validator.TryRange(maximum, 1, Int32.MaxValue))
+                                    // Check section for output destination
+                                    switch (section)
+                                    {
+                                        case SECTION_SEQUENCES_IN_CROZZLE:
+                                            aConfiguration.MaximumVerticalWords = minimum;
+                                            break;
+                                        case SECTION_INTERSECTIONS_IN_SEQUENCES:
+                                            aConfiguration.MaximumIntersectionsInVerticalWords = minimum;
+                                            break;
+                                        default:
+                                            Errors.Add(String.Format(ConfigurationErrors.WrongSectionError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
+                                            break;
+                                    }
+                                    if (!Validator.TryRange(minimum, 0, Int32.MaxValue))
                                         Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                 }
                                 else
@@ -518,6 +574,7 @@ namespace CrozzleApplication
                             }
                             else if (aConfigurationItem.IsIntersecting)
                             {
+
                                 // Get the values of each INTERSECTING point.
                                 String originalValues = aConfigurationItem.KeyValue.Value.Trim();
                                 if (Validator.IsDelimited(originalValues, Crozzle.StringDelimiters))
@@ -586,7 +643,7 @@ namespace CrozzleApplication
                                     Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                     continue;
                                 }
-                                else if (!Validator.TryRange(minimum, 1, Int32.MaxValue)) // if number out of range
+                                else if (!Validator.TryRange(minimum, 0, Int32.MaxValue)) // if number out of range
                                 {
                                     Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                 }
@@ -596,7 +653,7 @@ namespace CrozzleApplication
                                 switch (section)
                                 {
                                     case "SEQUENCES-IN-FILE":
-                                        aConfiguration.MaximumNumberOfUniqueWords = minimum;
+                                        aConfiguration.MinimumNumberOfUniqueWords = minimum;
                                         break;
                                     case "DUPLICATE-SEQUENCES":
                                         aConfiguration.MinimumNumberOfTheSameWord = minimum;
@@ -621,7 +678,7 @@ namespace CrozzleApplication
                                     Errors.Add(String.Format(ConfigurationErrors.ValueError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                     continue;
                                 }
-                                else if (!Validator.TryRange(maximum, 1, Int32.MaxValue)) // if number out of range
+                                else if (!Validator.TryRange(maximum, 0, Int32.MaxValue)) // if number out of range
                                 {
                                     Errors.Add(String.Format(ConfigurationErrors.IntegerError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                 }
@@ -634,10 +691,10 @@ namespace CrozzleApplication
                                         aConfiguration.MaximumNumberOfUniqueWords = maximum;
                                         break;
                                     case "DUPLICATE-SEQUENCES":
-                                        aConfiguration.MinimumNumberOfTheSameWord = maximum;
+                                        aConfiguration.MaximumNumberOfTheSameWord = maximum;
                                         break;
                                     case "VALID-GROUPS":
-                                        aConfiguration.MinimumNumberOfGroups = maximum;
+                                        aConfiguration.MaximumNumberOfGroups = maximum;
                                         break;
                                     default:
                                         Errors.Add(String.Format(ConfigurationErrors.WrongSectionError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0])); ;
@@ -653,10 +710,10 @@ namespace CrozzleApplication
 
                 // Close files.
                 fileIn.Close();
-
+          
                 // Check which keys are missing from the configuration file.
                 foreach (string expectedKey in ExpectedKeys)
-                    if (!ActualKeys.Contains(expectedKey) && !expectedKey.StartsWith("MINIMUM") && !expectedKey.StartsWith("MAXIMUM"))
+                    if (!ActualKeys.Contains(expectedKey))
                         Errors.Add(String.Format(ConfigurationErrors.MissingKeyError, expectedKey));
                 for (char ch = 'A'; ch <= 'Z'; ch++)
                     if (!ActualIntersectingKeys[(int)ch - (int)'A'])
