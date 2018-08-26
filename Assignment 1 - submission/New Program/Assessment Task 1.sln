@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrozzleFormApplication", "CrozzleApplication\CrozzleFormApplication.csproj", "{D99B5107-B237-4DCE-B859-67F52FD8E552}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrozzleUnitTest", "UnitTestProject1\CrozzleUnitTest.csproj", "{2DC7B821-7F6A-4D08-A1AF-A1DED525F012}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{D99B5107-B237-4DCE-B859-67F52FD8E552}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D99B5107-B237-4DCE-B859-67F52FD8E552}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D99B5107-B237-4DCE-B859-67F52FD8E552}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DC7B821-7F6A-4D08-A1AF-A1DED525F012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DC7B821-7F6A-4D08-A1AF-A1DED525F012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DC7B821-7F6A-4D08-A1AF-A1DED525F012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DC7B821-7F6A-4D08-A1AF-A1DED525F012}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2DC3D707-159E-400D-8BBC-C3E04FB1F88E}
 	EndGlobalSection
 EndGlobal

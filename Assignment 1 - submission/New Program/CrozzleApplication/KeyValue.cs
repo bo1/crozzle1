@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace CrozzleApplication
 {
-    class KeyValue
+    public class KeyValue
     {
         #region constants
         const int KeyValueLength = 2;
