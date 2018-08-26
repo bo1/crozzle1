@@ -339,7 +339,7 @@ namespace CrozzleApplication
                                     Errors.Add(String.Format(ConfigurationErrors.WrongSectionError, aConfigurationItem.KeyValue.OriginalKeyValue, Validator.Errors[0]));
                                     break;
                                 }
-
+                                
                                 // Remove delimeter
                                 aConfiguration.LogFileName = aConfigurationItem.KeyValue.Value.Trim();
                                 if (Validator.IsDelimited(aConfiguration.LogFileName, Crozzle.StringDelimiters))

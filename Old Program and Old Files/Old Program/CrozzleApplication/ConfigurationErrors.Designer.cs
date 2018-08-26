@@ -177,5 +177,15 @@ namespace CrozzleApplication {
                 return "MixConfigWithComentError";
             }
         }
+
+        
+        internal static string LogFileOutputError
+        {
+            get
+            {
+                return "LogFileOutputError";
+            }
+        }
+
     }
 }

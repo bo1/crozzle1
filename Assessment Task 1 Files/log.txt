@@ -1074,3 +1074,146 @@ error 5: code 10001: non-alphabetic value (11504) in field 4 of the wordlist
 error 6: code 10001: non-alphabetic value (11967) in field 5 of the wordlist
 END PROCESSING FILE: Test1.seq
 
+START PROCESSING FILE: Test1.czl
+error 1: code 3001: row value (11) is not in the range 1 to 10, inclusive
+error 2: code 3001: row value (13) is not in the range 1 to 10, inclusive
+error 3: code 3001: row value (14) is not in the range 1 to 10, inclusive
+END PROCESSING FILE: Test1.czl
+
+START PROCESSING FILE: Test1.cfg
+END PROCESSING FILE: Test1.cfg
+
+START PROCESSING FILE: Test1.seq
+END PROCESSING FILE: Test1.seq
+
+START PROCESSING FILE: Test2.czl
+error 1: code 3001: row value (13) is not in the range 1 to 10, inclusive
+error 2: code 3001: row value (15) is not in the range 1 to 10, inclusive
+error 3: code 3001: row value (15) is not in the range 1 to 10, inclusive
+END PROCESSING FILE: Test2.czl
+
+START PROCESSING FILE: Test2.cfg
+END PROCESSING FILE: Test2.cfg
+
+START PROCESSING FILE: Test2.seq
+END PROCESSING FILE: Test2.seq
+
+START PROCESSING FILE: Test1.czl
+error 1: code 3001: row value (11) is not in the range 1 to 10, inclusive
+error 2: code 3001: row value (13) is not in the range 1 to 10, inclusive
+error 3: code 3001: row value (14) is not in the range 1 to 10, inclusive
+END PROCESSING FILE: Test1.czl
+
+START PROCESSING FILE: Test1.cfg
+END PROCESSING FILE: Test1.cfg
+
+START PROCESSING FILE: Test1.seq
+END PROCESSING FILE: Test1.seq
+
+START PROCESSING FILE: Test2.czl
+error 1: code 3001: row value (13) is not in the range 1 to 10, inclusive
+error 2: code 3001: row value (15) is not in the range 1 to 10, inclusive
+error 3: code 3001: row value (15) is not in the range 1 to 10, inclusive
+END PROCESSING FILE: Test2.czl
+
+START PROCESSING FILE: Test2.cfg
+END PROCESSING FILE: Test2.cfg
+
+START PROCESSING FILE: Test2.seq
+END PROCESSING FILE: Test2.seq
+
+START PROCESSING FILE: Test1.czl
+error 1: code 3001: row value (11) is not in the range 1 to 10, inclusive
+error 2: code 3001: row value (13) is not in the range 1 to 10, inclusive
+error 3: code 3001: row value (14) is not in the range 1 to 10, inclusive
+END PROCESSING FILE: Test1.czl
+
+START PROCESSING FILE: Test1.cfg
+END PROCESSING FILE: Test1.cfg
+
+START PROCESSING FILE: Test1.seq
+END PROCESSING FILE: Test1.seq
+
+START PROCESSING FILE: Test1.czl
+error 1: code 3001: row value (12) is not in the range 1 to 10, inclusive
+error 2: code 3001: row value (11) is not in the range 1 to 10, inclusive
+END PROCESSING FILE: Test1.czl
+
+START PROCESSING FILE: Test1.cfg
+END PROCESSING FILE: Test1.cfg
+
+START PROCESSING FILE: Test1.seq
+END PROCESSING FILE: Test1.seq
+
+START PROCESSING FILE: Test1.czl
+error 1: code 3001: row value (11) is not in the range 1 to 10, inclusive
+error 2: code 3001: row value (13) is not in the range 1 to 10, inclusive
+error 3: code 3001: row value (14) is not in the range 1 to 10, inclusive
+END PROCESSING FILE: Test1.czl
+
+START PROCESSING FILE: Test1.cfg
+END PROCESSING FILE: Test1.cfg
+
+START PROCESSING FILE: Test1.seq
+END PROCESSING FILE: Test1.seq
+
+START PROCESSING FILE: Test1.czl
+END PROCESSING FILE: Test1.czl
+
+START PROCESSING FILE: Test1.cfg
+END PROCESSING FILE: Test1.cfg
+
+START PROCESSING FILE: Test1.seq
+END PROCESSING FILE: Test1.seq
+
+START PROCESSING CROZZLE:
+END PROCESSING CROZZLE:
+
+START PROCESSING FILE: Test1.czl
+END PROCESSING FILE: Test1.czl
+
+START PROCESSING FILE: Test1.cfg
+END PROCESSING FILE: Test1.cfg
+
+START PROCESSING FILE: Test1.seq
+END PROCESSING FILE: Test1.seq
+
+START PROCESSING CROZZLE:
+END PROCESSING CROZZLE:
+
+START PROCESSING FILE: Test2.czl
+END PROCESSING FILE: Test2.czl
+
+START PROCESSING FILE: Test2.cfg
+END PROCESSING FILE: Test2.cfg
+
+START PROCESSING FILE: Test2.seq
+END PROCESSING FILE: Test2.seq
+
+START PROCESSING CROZZLE:
+error 1: code 11008: the number of vertical words is 9 but this is not within [1, 5]
+error 2: code 11002: the number of horizontal words intersecting WENDY is 1, but this is not within [2, 500]
+error 3: code 11003: the number of times AL occurs is 2, but this is not within [0, 1]
+error 4: code 11003: the number of times ROSE occurs is 3, but this is not within [0, 1]
+error 5: code 11003: the number of times RON occurs is 2, but this is not within [0, 1]
+error 6: code 11005: the number of groups of connected words is 4, but this is not within [1, 2]
+END PROCESSING CROZZLE:
+
+START PROCESSING FILE: Test2.czl
+END PROCESSING FILE: Test2.czl
+
+START PROCESSING FILE: Test2.cfg
+END PROCESSING FILE: Test2.cfg
+
+START PROCESSING FILE: Test2.seq
+END PROCESSING FILE: Test2.seq
+
+START PROCESSING CROZZLE:
+error 1: code 11008: the number of vertical words is 9 but this is not within [1, 5]
+error 2: code 11002: the number of horizontal words intersecting WENDY is 1, but this is not within [2, 500]
+error 3: code 11003: the number of times AL occurs is 2, but this is not within [0, 1]
+error 4: code 11003: the number of times ROSE occurs is 3, but this is not within [0, 1]
+error 5: code 11003: the number of times RON occurs is 2, but this is not within [0, 1]
+error 6: code 11005: the number of groups of connected words is 4, but this is not within [1, 2]
+END PROCESSING CROZZLE:
+

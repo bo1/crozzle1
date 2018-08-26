@@ -79,9 +79,37 @@ namespace CrozzleApplication
 
             Errors = new List<String>();
             aWordList = new WordList(path, aConfiguration);
+            bool isHeader = true;
+
+            String[] words = new string[]{};
+            
+            // Build word list
+            while (!fileIn.EndOfStream)
+            {
+                String line = fileIn.ReadLine();
+                String[] values = line.Split(',');
+
+                if(isHeader)
+                {
+                    // TODO - check header regex + all totals
+                    isHeader = false;
+                    continue;
+                }
+
+                // TODO - Calculate word points
+                // TODO - Check length
+                // TODO - Check ASCII sum
+                // TODO - Check total
+                // Get Word
+                String word = values[0];
+                Array.Resize(ref words, words.Length + 1);
+                words[words.Length - 1] = word;
+
+            }
 
             // Split the original wordlist from the file.
-            aWordList.OriginalList = fileIn.ReadLine().Split(WordSeparators);
+            //aWordList.OriginalList = fileIn.ReadLine().Split(WordSeparators);
+            aWordList.OriginalList = words;
 
             // Check each field in the wordlist.
             int fieldNumber = 0;

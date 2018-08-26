@@ -113,7 +113,15 @@ namespace CrozzleApplication {
                 return ResourceManager.GetString("RowError", resourceCulture);
             }
         }
-        
+
+        internal static string SequenceFormatError
+        {
+            get
+            {
+                return "SequenceFormatError";
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to code 4004: wordlist filename ({0}) doesn&apos;t match filename in the wordlist object ({1}).
         /// </summary>

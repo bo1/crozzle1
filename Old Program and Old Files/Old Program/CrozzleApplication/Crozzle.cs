@@ -272,10 +272,53 @@ namespace CrozzleApplication
                         if (section == "HORIZONTAL-SEQUENCES")
                         {
                             type = "ROW";
+
+                            try
+                            {
+                                String oldFormat = aCrozzleFileItem.KeyValue.OriginalKeyValue;
+
+                                oldFormat = oldFormat.Substring("SEQUENCE=".Length);
+                                string[] split;
+                                split = oldFormat.Split(',');
+                                String key = split[0];
+                                String row = split[1].Split('=')[1];
+                                String col = split[2];
+
+                                String newFormat = type + "=" + row + "," + key + "," + col;
+                                Console.WriteLine("New Format = " + newFormat);
+                                wordData.Add(newFormat);
+                            }
+                            catch (Exception e)
+                            {
+                                Errors.Add(String.Format(CrozzleFileErrors.SequenceFormatError, aCrozzleFileItem.KeyValue.OriginalKeyValue));
+                            }
+
                         }
                         else if (section == "VERTICAL-SEQUENCES")
                         {
                             type = "COLUMN";
+
+
+                            try
+                            {
+                                String oldFormat = aCrozzleFileItem.KeyValue.OriginalKeyValue;
+
+                                oldFormat = oldFormat.Substring("SEQUENCE=".Length);
+                                string[] split;
+                                split = oldFormat.Split(',');
+                                String key = split[0];
+                                String row = split[1].Split('=')[1];
+                                String col = split[2];
+
+                                String newFormat = type + "=" + col + "," + key + "," + row;
+                                Console.WriteLine("New Format = " + newFormat);
+                                wordData.Add(newFormat);
+                            }
+                            catch (Exception e)
+                            {
+                                Errors.Add(String.Format(CrozzleFileErrors.SequenceFormatError, aCrozzleFileItem.KeyValue.OriginalKeyValue));
+                            }
+
                         }
                         else
                         {
@@ -283,18 +326,6 @@ namespace CrozzleApplication
                             break;
                         }
 
-                        String oldFormat = aCrozzleFileItem.KeyValue.OriginalKeyValue;
-
-                        oldFormat = oldFormat.Substring("SEQUENCE=".Length);
-                        string[] split;
-                        split = oldFormat.Split(',');
-                        String key = split[0];
-                        String row = split[1].Split('=')[1];
-                        String col = split[2];
-
-                        String newFormat = type + "=" + row + "," + key + "," + col;
-                        Console.WriteLine("New Format = " + newFormat);
-                        wordData.Add(newFormat);
                     }
                 }
                 else
@@ -604,9 +635,17 @@ namespace CrozzleApplication
         #region log errors
         public void LogFileErrors(String errors)
         {
-            StreamWriter logfile = new StreamWriter(CrozzleDirectoryName + @"\" + Configuration.LogFileName, true);
-            logfile.WriteLine(errors);
-            logfile.Close();
+            try
+            {
+                StreamWriter logfile = new StreamWriter(CrozzleDirectoryName + @"\" + Configuration.LogFileName, true);
+                logfile.WriteLine(errors);
+                logfile.Close();
+            }
+            catch(Exception e)
+            {
+                Errors.Add(String.Format(ConfigurationErrors.LogFileOutputError, e.Message));
+            }
+            
         }
         #endregion
     }
