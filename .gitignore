@@ -5,12 +5,12 @@ zip backup
 *.log
 *.CopyComplete
 *.cache
-Old Program and Old Files/log.txt
-Old Program and Old Files/Old Program/CrozzleApplication/bin
-Old Program and Old Files/Old Program/CrozzleApplication/obj
+Assignment 1 - submission/log.txt
+Assignment 1 - submission/New Program/CrozzleApplication/bin
+Assignment 1 - submission/New Program/CrozzleApplication/obj
 
-Old Program and Old Files - Original/Old Program/CrozzleApplication/bin
-Old Program and Old Files - Original/Old Program/CrozzleApplication/obj
+Spec/Old Program and Old Files/Old Program/CrozzleApplication/bin
+Spec/Old Program and Old Files/Old Program/CrozzleApplication/obj
 
 *.exe
 
